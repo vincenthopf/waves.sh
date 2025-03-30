@@ -179,9 +179,9 @@
         .section-title {
             font-size: 2.5em;
             margin-bottom: 40px;
-            text-align: left;
+            text-align: center;
             width: 100%;
-            padding-right: 20px;
+            position: relative;
         }
 
         .section-title:after {
@@ -191,7 +191,8 @@
             height: 3px;
             background-color: var(--accent-color);
             bottom: -10px;
-            left: 0;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         .problem-container {
@@ -213,7 +214,7 @@
             transition: all var(--transition-speed);
             position: relative;
             overflow: hidden;
-            text-align: left;
+            text-align: center;
         }
 
         .problem-card:hover {
@@ -243,7 +244,7 @@
             margin-bottom: 15px;
             color: var(--accent-color);
             font-size: 1.2em;
-            text-align: left;
+            text-align: center;
         }
 
         /* Highlights */
@@ -257,7 +258,7 @@
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(65, 105, 225, 0.2);
             backdrop-filter: blur(10px);
-            text-align: left;
+            text-align: center;
         }
 
         .highlight-box::before {
@@ -284,7 +285,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-bottom: 20px;
-            text-align: left;
+            text-align: center;
         }
 
         /* Eligibility */
@@ -344,6 +345,7 @@
             transition: transform 0.2s ease;
             font-size: 0.95em;
             line-height: 1.4;
+            text-align: center;
         }
 
         .eligibility-list li:hover {
@@ -391,8 +393,8 @@
             height: 100%;
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
-            text-align: left;
+            align-items: center;
+            text-align: center;
         }
 
         .feature-item::before {
@@ -429,7 +431,7 @@
             font-size: 0.95em;
             line-height: 1.4;
             margin: 0;
-            text-align: left;
+            text-align: center;
         }
 
         /* Benefits */
@@ -446,6 +448,7 @@
             background: var(--glass-effect);
             padding: 20px;
             padding-left: 45px;
+            padding-right: 15px;
             border-radius: 15px;
             position: relative;
             transition: all 0.3s ease;
@@ -456,7 +459,7 @@
             height: 100%;
             display: flex;
             align-items: center;
-            text-align: left;
+            text-align: center;
         }
 
         .benefits-list li:hover {
@@ -503,70 +506,53 @@
         /* Testimonials */
         .testimonials {
             padding: 80px 0;
-            text-align: left;
+            text-align: center;
             position: relative;
             overflow: hidden;
         }
-
-        .testimonial-container {
-            display: flex;
-            justify-content: flex-start;
-            flex-wrap: wrap;
+        
+        /* Video testimonials */
+        .video-container {
+            margin-top: 40px;
+        }
+        
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 30px;
-            margin-top: 50px;
-        }
-
-        .testimonial-card {
-            background: var(--glass-effect);
-            border-radius: 15px;
-            padding: 25px;
             width: 100%;
-            max-width: 350px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(5px);
+        }
+        
+        .video-item {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             transition: all 0.3s ease;
-        }
-
-        .testimonial-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            border-color: rgba(65, 105, 225, 0.2);
-        }
-
-        .testimonial-quote {
-            font-style: italic;
-            margin-bottom: 20px;
             position: relative;
-            padding: 0 20px;
-            font-size: 0.95em;
-            line-height: 1.5;
-            text-align: left;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            background: rgba(20, 20, 20, 0.5);
+            border: 1px solid rgba(65, 105, 225, 0.2);
         }
-
-        .testimonial-quote::before,
-        .testimonial-quote::after {
-            content: '"';
+        
+        .video-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border-color: rgba(65, 105, 225, 0.4);
+        }
+        
+        .video-item iframe {
             position: absolute;
-            color: var(--accent-color);
-            font-size: 2em;
-            font-family: Georgia, serif;
-        }
-
-        .testimonial-quote::before {
+            top: 0;
             left: 0;
-            top: -10px;
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
         }
-
-        .testimonial-quote::after {
-            right: 0;
-            bottom: -10px;
-        }
-
-        .testimonial-author {
-            font-weight: bold;
-            color: var(--accent-color);
-            text-align: right;
+        
+        @media (max-width: 768px) {
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         /* Footer */
@@ -793,7 +779,7 @@
                 </div>
             </div>
 
-            <div class="fade-in" style="text-align: left; margin-bottom: 40px;">
+            <div class="fade-in" style="text-align: center; margin-top: 50px;">
                 <p>This isn't burnout. It's erosion. And it's costing you more than you think.</p>
             </div>
         </div>
@@ -922,8 +908,10 @@
         <div class="container">
             <div class="apply-content fade-in">
                 <h2 class="section-title" style="color: var(--accent-color);">Apply for Consideration</h2>
-                <p>This protocol is not open to the public. I work with only a handful of elite men at any time. No group calls. No fluff. No recycled advice. If you want elite transformation, not improvement</p>
-                <a href="#" class="cta-button">APPLY NOW</a>
+                <p style="text-align: center;">This protocol is not open to the public. I work with only a handful of elite men at any time. No group calls. No fluff. No recycled advice. If you want elite transformation, not improvement</p>
+                <div style="text-align: center; margin-top: 30px;">
+                    <a href="#" class="cta-button">APPLY NOW</a>
+                </div>
             </div>
         </div>
     </section>
@@ -932,14 +920,17 @@
     <section class="testimonials">
         <div class="container">
             <h2 class="section-title fade-in">WHAT OTHERS ARE SAYING</h2>
-            <div class="testimonial-container">
-                <div class="testimonial-card fade-in">
-                    <p class="testimonial-quote">Placeholder for testimonial content</p>
-                    <p class="testimonial-author">- Client Name</p>
-                </div>
-                <div class="testimonial-card fade-in">
-                    <p class="testimonial-quote">Placeholder for testimonial content</p>
-                    <p class="testimonial-author">- Client Name</p>
+            <div class="video-container fade-in">
+                <div class="video-grid">
+                    <div class="video-item">
+                        <iframe width="100%" height="100%" src="https://www.youtube.com/embed/ST6ylp2Dvbo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div class="video-item">
+                        <iframe width="100%" height="100%" src="https://www.youtube.com/embed/O43gt36Mnnc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div class="video-item">
+                        <iframe width="100%" height="100%" src="https://www.youtube.com/embed/qXNq_xEUMIQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
                 </div>
             </div>
         </div>
