@@ -8,12 +8,11 @@
         :root {
             --background-color: #0a0a0a;
             --text-color: #e0e0e0;
-            --link-hover-bg: #2a2a2a;
+            --link-hover-bg: #2a2a2a; /* Color for the wipe effect */
             --icon-color: #ffffff;
-            --border-radius: 8px; /* This defines the button's roundness */
-            --glow-color: rgba(255, 255, 255, 0.9);
-            --anim-segment-speed: 0.4s; /* SLOWER: Speed for each segment */
-            --border-thickness: 2px;
+            --border-radius: 8px;
+            --border-thickness: 2px; /* Kept in case needed elsewhere */
+            --wipe-speed: 0.35s; /* Speed of the background wipe */
         }
 
         html, body {
@@ -82,7 +81,7 @@
         }
 
         .social-links a:hover {
-            background-color: var(--link-hover-bg);
+            background-color: var(--link-hover-bg); /* Simple hover for social icons */
         }
 
         .social-links a:hover svg {
@@ -98,89 +97,44 @@
         .link-item a {
             display: flex;
             align-items: center;
-            background-color: transparent;
+            background-color: transparent; /* Main background is transparent */
             color: var(--text-color);
             text-decoration: none;
             padding: 15px 20px;
             margin-bottom: 15px;
             border: 1px solid #333; /* Base border */
-            border-radius: var(--border-radius); /* Button corner rounding */
-            transition: background-color 0.3s ease-in-out;
+            border-radius: var(--border-radius);
             text-align: left;
-            position: relative;
-            overflow: hidden; /* Important: clips the border spans */
+            position: relative; /* Needed for pseudo-element */
+            overflow: hidden;   /* Clip the pseudo-element */
             z-index: 1;
+            transition: color 0.3s ease-in-out; /* Optional: Transition text color too */
         }
 
-        .link-item a:hover {
-            background-color: var(--link-hover-bg);
-        }
-
-        /* Animated Border Spans */
-        .border-light {
+        /* Background Wipe Pseudo-Element */
+        .link-item a::before {
+            content: '';
             position: absolute;
-            background-color: var(--glow-color);
-            box-shadow: 0 0 3px var(--glow-color);
-            opacity: 0; /* Hidden initially */
-            transform-origin: center center; /* Default, will be overridden */
-            transition: transform var(--anim-segment-speed) linear,
-                        opacity calc(var(--anim-segment-speed) / 2) linear;
-            z-index: 0;
-            pointer-events: none;
-             /* Ensure border-radius clipping works on children */
-             border-radius: inherit; /* Inherit parent border radius for clipping */
-        }
-
-        .border-light.border-top {
             top: 0;
             left: 0;
             width: 100%;
-            height: var(--border-thickness);
-            transform: scaleX(0);
-            transform-origin: left center;
-        }
-        .border-light.border-right {
-            top: 0;
-            right: 0;
-            width: var(--border-thickness);
             height: 100%;
-            transform: scaleY(0);
-            transform-origin: top center;
-        }
-        .border-light.border-bottom {
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: var(--border-thickness);
-            transform: scaleX(0);
-            transform-origin: right center;
-        }
-         .border-light.border-left {
-            top: 0;
-            left: 0;
-            width: var(--border-thickness);
-            height: 100%;
-            transform: scaleY(0);
-            transform-origin: bottom center;
+            background-color: var(--link-hover-bg);
+            transform: scaleX(0); /* Start scaled to zero width */
+            transform-origin: left center; /* Wipe from left */
+            transition: transform var(--wipe-speed) ease-in-out;
+            z-index: -1; /* Behind the content */
+            border-radius: inherit; /* Match parent's border radius */
         }
 
-        /* Active states (set by JS) */
-         .border-light.active {
-            opacity: 1;
-         }
-         .border-light.border-top.active,
-         .border-light.border-bottom.active {
-             transform: scaleX(1);
-         }
-         .border-light.border-right.active,
-         .border-light.border-left.active {
-             transform: scaleY(1);
-         }
+        .link-item a:hover::before {
+            transform: scaleX(1); /* Scale to full width on hover */
+        }
 
-
+        /* Ensure content stays above the wipe */
         .link-icon, .link-text {
-            z-index: 1;
-            position: relative;
+            z-index: 2;
+            position: relative; /* Needed for z-index stacking */
         }
 
 
@@ -235,10 +189,6 @@
             <ul class="link-list">
                 <li class="link-item">
                     <a href="https://www.skool.com/venture/about" target="_blank" rel="noopener noreferrer">
-                        <span class="border-light border-top"></span>
-                        <span class="border-light border-right"></span>
-                        <span class="border-light border-bottom"></span>
-                        <span class="border-light border-left"></span>
                         <img src="https://cdn.beacons.ai/user_content/tc3mjF7xIlhF14QRFcP6J4UxsGf2/referenced_images/203e0818-e734-46b2-aec8-a04ed9da0b6a__link-in-bio__links-block__home__70ae28fb-4893-4323-a226-7f2b7ac69efb__97f6830f-a6a5-455b-8359-ec27bbde233b__1a39e670-bc53-469b-9aeb-490411f13497.jpg?t=1736561098745" alt="Free Network Logo" class="link-icon">
                         <div class="link-text">
                             <div class="link-title">Free Network</div>
@@ -248,10 +198,6 @@
                 </li>
                 <li class="link-item">
                     <a href="https://edensupps.shop/" target="_blank" rel="noopener noreferrer">
-                        <span class="border-light border-top"></span>
-                        <span class="border-light border-right"></span>
-                        <span class="border-light border-bottom"></span>
-                        <span class="border-light border-left"></span>
                         <img src="https://cdn.beacons.ai/user_content/tc3mjF7xIlhF14QRFcP6J4UxsGf2/referenced_images/e2d14f98-6c3c-4143-af4d-20b447685476__link-in-bio__links-block__home__70ae28fb-4893-4323-a226-7f2b7ac69efb__4e071544-0f26-45d3-955a-01b493ddff46__7d4735b7-aabf-498f-8601-7798c9c5f62e.jpg?t=1736560463585" alt="Eden Supplements Logo" class="link-icon">
                         <div class="link-text">
                             <div class="link-title">Eden Supplements</div>
@@ -261,10 +207,6 @@
                 </li>
                 <li class="link-item">
                     <a href="https://open.spotify.com/playlist/40weNoQNhVSGaYlcyDfrTK?si=7da5d6c97c444a14" target="_blank" rel="noopener noreferrer">
-                         <span class="border-light border-top"></span>
-                         <span class="border-light border-right"></span>
-                         <span class="border-light border-bottom"></span>
-                         <span class="border-light border-left"></span>
                          <img src="https://cdn.beacons.ai/user_content/tc3mjF7xIlhF14QRFcP6J4UxsGf2/referenced_images/d59fd6f6-91ec-4d78-9373-cb0c51302b19__link-in-bio__links-block__home__70ae28fb-4893-4323-a226-7f2b7ac69efb__55e83ebf-38e0-456a-b856-41c654db309a__347dea0d-8995-4d08-9344-472f8e092d23.jpg?t=1738655074873" alt="Podcast Vault Logo" class="link-icon">
                         <div class="link-text">
                             <div class="link-title">Podcast Vault</div>
@@ -276,62 +218,6 @@
         </main>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const links = document.querySelectorAll('.link-item a');
-            // Read the animation speed from the CSS variable
-            const segmentDuration = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--anim-segment-speed')) * 1000; // ms
-
-            links.forEach(link => {
-                const borderTop = link.querySelector('.border-top');
-                const borderRight = link.querySelector('.border-right');
-                const borderBottom = link.querySelector('.border-bottom');
-                const borderLeft = link.querySelector('.border-left');
-                // Keep order for sequence: top, right, bottom, left
-                const borders = [borderTop, borderRight, borderBottom, borderLeft];
-                let timeoutIds = [];
-
-                const clearTimeouts = () => {
-                    timeoutIds.forEach(clearTimeout);
-                    timeoutIds = [];
-                };
-
-                const resetBorders = () => {
-                    borders.forEach(border => border.classList.remove('active'));
-                     // Force reflow to ensure transitions reset correctly if re-hovered quickly
-                     void link.offsetWidth;
-                };
-
-                link.addEventListener('mouseenter', (e) => {
-                    clearTimeouts();
-                    resetBorders();
-
-                    // Start Sequence
-                    borderTop.classList.add('active'); // Animate top
-                    timeoutIds.push(setTimeout(() => {
-                         borderTop.classList.remove('active'); // Hide top (optional, depends on desired visual)
-                        borderRight.classList.add('active'); // Animate right
-                        timeoutIds.push(setTimeout(() => {
-                             borderRight.classList.remove('active'); // Hide right
-                            borderBottom.classList.add('active'); // Animate bottom
-                            timeoutIds.push(setTimeout(() => {
-                                 borderBottom.classList.remove('active'); // Hide bottom
-                                borderLeft.classList.add('active'); // Animate left
-                                timeoutIds.push(setTimeout(() => {
-                                     borderLeft.classList.remove('active'); // Hide left
-                                     // End of sequence
-                                }, segmentDuration));
-                            }, segmentDuration));
-                        }, segmentDuration));
-                    }, segmentDuration));
-                });
-
-                link.addEventListener('mouseleave', () => {
-                    clearTimeouts();
-                    resetBorders(); // Hide all borders immediately
-                });
-            });
-        });
-    </script>
+    <!-- No JavaScript needed for this effect -->
 </body>
 </html>
