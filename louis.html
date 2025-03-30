@@ -8,28 +8,36 @@
         :root {
             --background-color: #0a0a0a;
             --text-color: #e0e0e0;
-            --link-hover-bg: #1a1a1a;
+            --link-hover-bg: #2a2a2a;
             --icon-color: #ffffff;
             --border-radius: 8px;
+            --glow-color: rgba(255, 255, 255, 0.9);
+            --anim-segment-speed: 0.3s; /* Speed for each segment (top, right, etc.) */
+            --border-thickness: 2px;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--background-color);
             color: var(--text-color);
-            margin: 0;
-            padding: 40px 20px;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            padding: 20px;
             box-sizing: border-box;
+            min-height: 100vh;
         }
 
         .container {
             max-width: 600px;
             width: 100%;
             text-align: center;
+            padding: 20px 0;
         }
 
         .profile-pic {
@@ -49,23 +57,36 @@
 
         .social-links {
             margin-bottom: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
         }
 
         .social-links a {
             color: var(--icon-color);
             text-decoration: none;
-            margin: 0 10px;
-            transition: opacity 0.2s ease-in-out;
+            padding: 5px;
+            border-radius: 6px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+            background-color: transparent;
         }
 
-        .social-links a:hover {
-            opacity: 0.7;
-        }
-
-        .social-links svg {
+        .social-links a svg {
             width: 24px;
             height: 24px;
             vertical-align: middle;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .social-links a:hover {
+            background-color: var(--link-hover-bg);
+        }
+
+        .social-links a:hover svg {
+            transform: scale(1.15);
         }
 
         .link-list {
@@ -82,23 +103,91 @@
             text-decoration: none;
             padding: 15px 20px;
             margin-bottom: 15px;
-            border: 1px solid #333; /* Subtle border */
+            border: 1px solid #333; /* Base border */
             border-radius: var(--border-radius);
-            transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+            transition: background-color 0.3s ease-in-out;
             text-align: left;
+            position: relative; /* Crucial for pseudo-elements */
+            overflow: hidden;   /* Crucial for pseudo-elements */
+            z-index: 1;
         }
 
         .link-item a:hover {
             background-color: var(--link-hover-bg);
-            border-color: #555; /* Slightly lighter border on hover */
         }
+
+        /* Animated Border Light Element */
+        .border-light {
+            position: absolute;
+            background-color: var(--glow-color);
+            box-shadow: 0 0 3px var(--glow-color); /* Optional subtle glow */
+            opacity: 0; /* Hidden initially */
+            transition: width var(--anim-segment-speed) linear,
+                        height var(--anim-segment-speed) linear,
+                        top var(--anim-segment-speed) linear,
+                        left var(--anim-segment-speed) linear,
+                        opacity 0.1s linear; /* Fast fade in/out */
+            z-index: -1; /* Behind content */
+
+            /* Initial State (Top-Left Corner) */
+            top: 0;
+            left: 0;
+            width: 0;
+            height: var(--border-thickness);
+        }
+
+        .link-item a:hover .border-light {
+             opacity: 1; /* Make visible on hover */
+        }
+
+        /* Animation States (triggered by JS adding classes) */
+        .border-light.run-top {
+            width: 100%;
+            height: var(--border-thickness);
+            top: 0;
+            left: 0;
+        }
+        .border-light.run-right {
+            width: var(--border-thickness);
+            height: 100%;
+            top: 0;
+            left: calc(100% - var(--border-thickness)); /* Adjust for thickness */
+        }
+        .border-light.run-bottom {
+            width: 100%;
+            height: var(--border-thickness);
+            top: calc(100% - var(--border-thickness)); /* Adjust for thickness */
+            left: 0;
+        }
+        .border-light.run-left {
+            width: var(--border-thickness);
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+        /* State to reset/finish animation cleanly */
+         .border-light.reset {
+             width: 0;
+             height: var(--border-thickness);
+             top: 0;
+             left: 0;
+             opacity: 0;
+         }
+
+
+        .link-icon, .link-text {
+            z-index: 2; /* Ensure content is above animation */
+            position: relative; /* Ensure z-index takes effect */
+        }
+
 
         .link-icon {
             width: 40px;
             height: 40px;
-            object-fit: contain; /* Use contain for logos */
+            object-fit: contain;
             margin-right: 20px;
-            border-radius: 4px; /* Slightly rounded corners for icons */
+            border-radius: 4px;
+            flex-shrink: 0;
         }
 
         .link-text {
@@ -113,7 +202,7 @@
 
         .link-description {
             font-size: 0.9em;
-            color: #a0a0a0; /* Slightly muted description */
+            color: #a0a0a0;
         }
 
     </style>
@@ -121,20 +210,19 @@
 <body>
     <div class="container">
         <header>
-            <img src="/api/placeholder/120/120" alt="Profile Picture" class="profile-pic">
+            <img src="https://cdn.beacons.ai/user_content/tc3mjF7xIlhF14QRFcP6J4UxsGf2/profile_louistrimper.png?t=1736560294935" alt="Profile Picture" class="profile-pic">
             <h1 class="name">Louis Trimper</h1>
             <nav class="social-links">
-                <!-- Replace # with actual links -->
-                <a href="#" title="Email">
+                <a href="mailto:ltrimp04@gmail.com" title="Email">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M22 6C22 4.9 21.1 4 20 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6ZM20 6L12 11L4 6H20ZM20 18H4V8L12 13L20 8V18Z"/></svg>
                 </a>
-                <a href="#" title="Instagram">
+                <a href="https://instagram.com/_louistrimper" title="Instagram" target="_blank" rel="noopener noreferrer">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/></svg>
                 </a>
-                <a href="#" title="X (Twitter)">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>                
+                <a href="https://x.com/louistrimper" title="X (Twitter)" target="_blank" rel="noopener noreferrer">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                 </a>
-                <a href="#" title="YouTube">
+                <a href="https://www.youtube.com/@louistrimper" title="YouTube" target="_blank" rel="noopener noreferrer">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10,15L15.19,12L10,9V15M21.56,7.17C21.69,7.64 21.78,8.27 21.84,9.07C21.91,9.87 21.94,10.56 21.94,11.16L22,12C22,14.19 21.84,15.8 21.56,16.83C21.31,17.73 20.73,18.31 19.83,18.56C19.36,18.69 18.73,18.78 17.93,18.84C17.13,18.91 16.44,18.94 15.84,18.94L12,19C9.81,19 8.2,18.84 7.17,18.56C6.27,18.31 5.69,17.73 5.44,16.83C5.31,16.36 5.22,15.73 5.16,14.93C5.09,14.13 5.06,13.44 5.06,12.84L5,12C5,9.81 5.16,8.2 5.44,7.17C5.69,6.27 6.27,5.69 7.17,5.44C7.64,5.31 8.27,5.22 9.07,5.16C9.87,5.09 10.56,5.06 11.16,5.06L12,5C14.19,5 15.8,5.16 16.83,5.44C17.73,5.69 18.31,6.27 18.56,7.17Z"/></svg>
                 </a>
             </nav>
@@ -143,9 +231,9 @@
         <main>
             <ul class="link-list">
                 <li class="link-item">
-                    <!-- Replace # with actual link -->
-                    <a href="#">
-                        <img src="/api/placeholder/40/40" alt="Free Network Logo" class="link-icon">
+                    <a href="https://www.skool.com/venture/about" target="_blank" rel="noopener noreferrer">
+                        <span class="border-light"></span> {/* Added light span */}
+                        <img src="https://cdn.beacons.ai/user_content/tc3mjF7xIlhF14QRFcP6J4UxsGf2/referenced_images/203e0818-e734-46b2-aec8-a04ed9da0b6a__link-in-bio__links-block__home__70ae28fb-4893-4323-a226-7f2b7ac69efb__97f6830f-a6a5-455b-8359-ec27bbde233b__1a39e670-bc53-469b-9aeb-490411f13497.jpg?t=1736561098745" alt="Free Network Logo" class="link-icon">
                         <div class="link-text">
                             <div class="link-title">Free Network</div>
                             <div class="link-description">Where all entrepreneurs can connect, collaborate, and create.</div>
@@ -153,9 +241,9 @@
                     </a>
                 </li>
                 <li class="link-item">
-                     <!-- Replace # with actual link -->
-                    <a href="#">
-                        <img src="/api/placeholder/40/40" alt="Eden Supplements Logo" class="link-icon">
+                    <a href="https://edensupps.shop/" target="_blank" rel="noopener noreferrer">
+                        <span class="border-light"></span> {/* Added light span */}
+                        <img src="https://cdn.beacons.ai/user_content/tc3mjF7xIlhF14QRFcP6J4UxsGf2/referenced_images/e2d14f98-6c3c-4143-af4d-20b447685476__link-in-bio__links-block__home__70ae28fb-4893-4323-a226-7f2b7ac69efb__4e071544-0f26-45d3-955a-01b493ddff46__7d4735b7-aabf-498f-8601-7798c9c5f62e.jpg?t=1736560463585" alt="Eden Supplements Logo" class="link-icon">
                         <div class="link-text">
                             <div class="link-title">Eden Supplements</div>
                             <div class="link-description">Made by entrepreneurs for entrepreneurs</div>
@@ -163,9 +251,9 @@
                     </a>
                 </li>
                 <li class="link-item">
-                     <!-- Replace # with actual link -->
-                    <a href="#">
-                         <img src="/api/placeholder/40/40" alt="Podcast Vault Logo" class="link-icon">
+                    <a href="https://open.spotify.com/playlist/40weNoQNhVSGaYlcyDfrTK?si=7da5d6c97c444a14" target="_blank" rel="noopener noreferrer">
+                        <span class="border-light"></span> {/* Added light span */}
+                         <img src="https://cdn.beacons.ai/user_content/tc3mjF7xIlhF14QRFcP6J4UxsGf2/referenced_images/d59fd6f6-91ec-4d78-9373-cb0c51302b19__link-in-bio__links-block__home__70ae28fb-4893-4323-a226-7f2b7ac69efb__55e83ebf-38e0-456a-b856-41c654db309a__347dea0d-8995-4d08-9344-472f8e092d23.jpg?t=1738655074873" alt="Podcast Vault Logo" class="link-icon">
                         <div class="link-text">
                             <div class="link-title">Podcast Vault</div>
                             <div class="link-description">Personal podcast favourites</div>
@@ -175,5 +263,63 @@
             </ul>
         </main>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const links = document.querySelectorAll('.link-item a');
+            const segmentDuration = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--anim-segment-speed')) * 1000; // ms
+
+            links.forEach(link => {
+                const light = link.querySelector('.border-light');
+                let timeoutIds = []; // To store timeouts for cancellation
+
+                const clearTimeouts = () => {
+                    timeoutIds.forEach(clearTimeout);
+                    timeoutIds = [];
+                };
+
+                link.addEventListener('mouseenter', () => {
+                    clearTimeouts(); // Clear any existing animation sequence
+                    light.classList.remove('reset', 'run-top', 'run-right', 'run-bottom', 'run-left');
+                    // Force reflow to ensure the transition restarts correctly
+                    void light.offsetWidth;
+
+                    // Start sequence
+                    light.classList.add('run-top');
+                    timeoutIds.push(setTimeout(() => {
+                        light.classList.remove('run-top');
+                        light.classList.add('run-right');
+                        timeoutIds.push(setTimeout(() => {
+                            light.classList.remove('run-right');
+                            light.classList.add('run-bottom');
+                            timeoutIds.push(setTimeout(() => {
+                                light.classList.remove('run-bottom');
+                                light.classList.add('run-left');
+                                timeoutIds.push(setTimeout(() => {
+                                    light.classList.remove('run-left');
+                                    // Optional: uncomment to loop
+                                    // link.dispatchEvent(new MouseEvent('mouseenter'));
+                                    // Optional: uncomment to just reset at end
+                                     light.classList.add('reset');
+                                }, segmentDuration));
+                            }, segmentDuration));
+                        }, segmentDuration));
+                    }, segmentDuration));
+                });
+
+                link.addEventListener('mouseleave', () => {
+                    clearTimeouts(); // Stop the sequence
+                    // Reset to initial hidden state
+                    light.classList.remove('run-top', 'run-right', 'run-bottom', 'run-left');
+                    light.classList.add('reset');
+
+                    // Keep it hidden after a short delay to allow fade out
+                     timeoutIds.push(setTimeout(() => {
+                         light.classList.remove('reset');
+                     }, 100)); // Corresponds to opacity transition
+                });
+            });
+        });
+    </script>
 </body>
 </html>
