@@ -181,9 +181,9 @@
             margin-bottom: 40px;
             text-align: center;
             position: relative;
-            display: inline-block;
             left: 50%;
             transform: translateX(-50%);
+            width: 100%;
         }
 
         .section-title:after {
@@ -216,6 +216,7 @@
             transition: all var(--transition-speed);
             position: relative;
             overflow: hidden;
+            text-align: center;
         }
 
         .problem-card:hover {
@@ -258,6 +259,7 @@
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(65, 105, 225, 0.2);
             backdrop-filter: blur(10px);
+            text-align: center;
         }
 
         .highlight-box::before {
@@ -290,14 +292,16 @@
         .eligibility-section {
             display: flex;
             justify-content: space-between;
-            gap: 40px;
+            gap: 30px;
             margin: 60px 0;
+            flex-wrap: wrap;
         }
 
         .eligibility-column {
             flex: 1;
+            min-width: 280px;
             background: var(--glass-effect);
-            padding: 30px;
+            padding: 25px;
             border-radius: 15px;
             backdrop-filter: blur(5px);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -312,17 +316,19 @@
         }
 
         .eligibility-column h3 {
-            font-size: 1.6em;
-            margin-bottom: 30px;
+            font-size: 1.5em;
+            margin-bottom: 20px;
             position: relative;
             padding-bottom: 10px;
+            text-align: center;
         }
 
         .eligibility-column h3::after {
             content: '';
             position: absolute;
             bottom: 0;
-            left: 0;
+            left: 50%;
+            transform: translateX(-50%);
             width: 40px;
             height: 3px;
             background-color: var(--accent-color);
@@ -338,6 +344,8 @@
             padding-left: 30px;
             position: relative;
             transition: transform 0.2s ease;
+            font-size: 0.95em;
+            line-height: 1.4;
         }
 
         .eligibility-list li:hover {
@@ -367,21 +375,26 @@
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
             margin-top: 50px;
         }
 
         .feature-item {
             background: var(--card-bg);
             border-radius: 15px;
-            padding: 30px;
+            padding: 25px;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.05);
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
             z-index: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
         }
 
         .feature-item::before {
@@ -409,9 +422,15 @@
 
         .feature-item i {
             color: var(--accent-color);
-            font-size: 2em;
-            margin-bottom: 20px;
+            font-size: 1.8em;
+            margin-bottom: 15px;
             display: block;
+        }
+        
+        .feature-item p {
+            font-size: 0.95em;
+            line-height: 1.4;
+            margin: 0;
         }
 
         /* Benefits */
@@ -420,19 +439,25 @@
             padding: 0;
             margin: 50px 0;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
         }
 
         .benefits-list li {
             background: var(--glass-effect);
-            padding: 25px;
+            padding: 20px;
+            padding-left: 45px;
             border-radius: 15px;
             position: relative;
-            padding-left: 30px;
             transition: all 0.3s ease;
             border: 1px solid rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(5px);
+            font-size: 0.95em;
+            line-height: 1.4;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            text-align: center;
         }
 
         .benefits-list li:hover {
@@ -444,7 +469,7 @@
         .benefits-list li:before {
             content: '→';
             position: absolute;
-            left: 15px;
+            left: 20px;
             color: var(--accent-color);
             font-weight: bold;
         }
@@ -495,7 +520,8 @@
         .testimonial-card {
             background: var(--glass-effect);
             border-radius: 15px;
-            padding: 30px;
+            padding: 25px;
+            width: 100%;
             max-width: 350px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.05);
@@ -514,6 +540,8 @@
             margin-bottom: 20px;
             position: relative;
             padding: 0 20px;
+            font-size: 0.95em;
+            line-height: 1.5;
         }
 
         .testimonial-quote::before,
@@ -556,11 +584,25 @@
         /* Responsive Design */
         @media (max-width: 992px) {
             .eligibility-section {
-                flex-direction: column;
+                justify-content: center;
+            }
+
+            .eligibility-column {
+                flex-basis: 45%;
+                min-width: 280px;
             }
 
             .main-title {
                 font-size: 2.8em;
+            }
+            
+            .container {
+                padding: 0 30px;
+            }
+            
+            .problem-card {
+                flex-basis: 45%;
+                min-width: 280px;
             }
         }
 
@@ -580,6 +622,7 @@
 
             .hero-content {
                 padding: 30px;
+                margin: 0 15px;
             }
 
             .content-section {
@@ -592,6 +635,10 @@
 
             .benefits-list {
                 grid-template-columns: 1fr;
+            }
+            
+            .eligibility-column {
+                flex-basis: 100%;
             }
         }
 
@@ -751,15 +798,11 @@
         </div>
     </section>
 
-    <!-- Testimonials -->
+                <!-- Testimonials -->
     <section class="testimonials">
         <div class="container">
             <h2 class="section-title fade-in">WHAT OTHERS ARE SAYING</h2>
             <div class="testimonial-container">
-                <div class="testimonial-card fade-in">
-                    <p class="testimonial-quote">Placeholder for testimonial content</p>
-                    <p class="testimonial-author">- Client Name</p>
-                </div>
                 <div class="testimonial-card fade-in">
                     <p class="testimonial-quote">Placeholder for testimonial content</p>
                     <p class="testimonial-author">- Client Name</p>
@@ -877,4 +920,59 @@
     <section id="apply" class="apply-section">
         <div class="container">
             <div class="apply-content fade-in">
-                <h2 class="section-title" style="color: var(--accent-color);">Apply for
+                <h2 class="section-title" style="color: var(--accent-color);">Apply for Consideration</h2>
+                <p>This protocol is not open to the public. I work with only a handful of elite men at any time. No group calls. No fluff. No recycled advice. If you want elite transformation, not improvement</p>
+                <a href="#" class="cta-button">APPLY NOW</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final Testimonials -->
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title fade-in">WHAT OTHERS ARE SAYING</h2>
+            <div class="testimonial-container">
+                <div class="testimonial-card fade-in">
+                    <p class="testimonial-quote">Placeholder for testimonial content</p>
+                    <p class="testimonial-author">- Client Name</p>
+                </div>
+                <div class="testimonial-card fade-in">
+                    <p class="testimonial-quote">Placeholder for testimonial content</p>
+                    <p class="testimonial-author">- Client Name</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 Elite Sleep & Performance. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll animation
+        document.querySelector('.scroll-indicator').addEventListener('click', function() {
+            document.querySelector('#problem').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Fade in elements on scroll
+        const fadeElements = document.querySelectorAll('.fade-in');
+        
+        function checkFade() {
+            fadeElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = window.innerHeight - 100;
+                
+                if (elementTop < elementVisible) {
+                    element.classList.add('appear');
+                }
+            });
+        }
+        
+        // Check elements on load
+        window.addEventListener('load', checkFade);
+        
+        // Check elements on scroll
+        window.addEventListener('scroll', checkFade);
+    </script>
