@@ -3,17 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Waves.sh</title>
-    <!-- Add Font Awesome CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Waves.sh Terminal - Deploying...</title>
     <style>
         :root {
             --background-color: #000000;
+            --terminal-header-bg: #1e1e1e;
             --text-color: #e0e0e0;
-            --link-hover-bg: #2a2a2a; /* Color for the wipe effect */
-            --icon-color: #ffffff; /* Color for the icons */
+            --prompt-color: #a0a0a0; /* Slightly dimmer prompt */
+            --command-color: #e0e0e0; /* User typed commands */
+            --output-color: #b0b0b0;  /* Command output */
+            --border-color: #333;
             --border-radius: 8px;
-            --wipe-speed: 0.35s; /* Speed of the background wipe */
+            --dot-red: #ff5f56;
+            --dot-yellow: #ffbd2e;
+            --dot-green: #27c93f;
         }
 
         html, body {
@@ -26,124 +29,212 @@
             background-color: var(--background-color);
             color: var(--text-color);
             display: flex;
-            justify-content: center; /* Center horizontally */
-            align-items: center; /* Center vertically */
+            justify-content: center;
+            align-items: center;
             padding: 20px;
             box-sizing: border-box;
             min-height: 100vh;
         }
 
         .container {
-            max-width: 680px; /* Slightly wider for potentially longer text */
+            max-width: 720px;
             width: 100%;
-            text-align: center;
             padding: 20px 0;
         }
 
-        .cta-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+        .terminal-window {
+            background-color: var(--background-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
-        .cta-item a {
+        .terminal-header {
+            background-color: var(--terminal-header-bg);
+            padding: 8px 12px;
             display: flex;
             align-items: center;
-            background-color: transparent;
+        }
+
+        .terminal-dots span {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .dot-red { background-color: var(--dot-red); }
+        .dot-yellow { background-color: var(--dot-yellow); }
+        .dot-green { background-color: var(--dot-green); }
+
+        .terminal-body {
+            padding: 10px 15px 15px 15px;
+            font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+            min-height: 280px; /* Adjusted height */
+            line-height: 1.6;
             color: var(--text-color);
-            text-decoration: none;
-            padding: 20px 25px;
-            border: 1px solid #333;
-            border-radius: var(--border-radius);
-            text-align: left;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-            transition: color 0.3s ease-in-out;
+            overflow-y: auto;
         }
 
-        /* Background Wipe Pseudo-Element */
-        .cta-item a::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--link-hover-bg);
-            transform: scaleX(0);
-            transform-origin: left center;
-            transition: transform var(--wipe-speed) ease-in-out;
-            z-index: -1;
-            border-radius: inherit;
+        .terminal-line {
+            min-height: 1.6em;
+            white-space: pre-wrap;
         }
 
-        .cta-item a:hover::before {
-            transform: scaleX(1);
+        .prompt { color: var(--prompt-color); }
+        .command { color: var(--command-color); }
+        .output { color: var(--output-color); }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 1.1em;
+            background-color: var(--command-color);
+            margin-left: 3px;
+            animation: blink 1s step-end infinite;
+            vertical-align: bottom;
         }
 
-        /* Icon Styling */
-        .cta-icon {
-            color: var(--icon-color);
-            font-size: 1.875em; /* Increased size by 25% (1.5 * 1.25) */
-            margin-right: 20px;
-            flex-shrink: 0;
-            width: 1.875em; /* Updated width to match new font-size */
-            text-align: center;
-            z-index: 2;
-            position: relative;
-        }
-
-        /* Text Container */
-        .cta-text-content {
-            flex-grow: 1;
-            z-index: 2;
-            position: relative;
-        }
-
-
-        .cta-title {
-            font-size: 1.2em;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .cta-description {
-            font-size: 0.95em;
-            color: #a0a0a0;
-            line-height: 1.5;
+        @keyframes blink {
+            from, to { opacity: 1; }
+            50% { opacity: 0; }
         }
 
     </style>
 </head>
 <body>
     <div class="container">
-        <main>
-            <ul class="cta-list">
-                <li class="cta-item">
-                    <a href="https://vjh.io" target="_blank" rel="noopener noreferrer">
-                        <i class="fa-regular fa-circle-user cta-icon"></i>
-                        <div class="cta-text-content">
-                            <div class="cta-title">Waves.sh makes slick as f*ck bio pages for you socials.</div>
-                            <div class="cta-description">We keep things simple, with no BS branding and simple pricing. Get your page for free today!</div>
-                        </div>
-                    </a>
-                </li>
-                <li class="cta-item">
-                    <a href="https://ig.me/m/vincenthopf" target="_blank" rel="noopener noreferrer">
-                        <i class="fa-solid fa-link cta-icon"></i>
-                        <div class="cta-text-content">
-                            <div class="cta-title">Want a Bio Page?</div>
-                            <div class="cta-description">Want one of our bio pages? click here to contact us to request one!</div>
-                        </div>
-                    </a>
-                </li>
-            </ul>
-        </main>
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <div class="terminal-dots">
+                    <span class="dot-red"></span>
+                    <span class="dot-yellow"></span>
+                    <span class="dot-green"></span>
+                </div>
+            </div>
+            <div class="terminal-body" id="terminal-body">
+                <!-- Lines added by JS -->
+            </div>
+        </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const terminalBody = document.getElementById('terminal-body');
+            // --- Add the redirect URL ---
+            const redirectUrl = 'https://www.waves.sh'; // Target URL
+
+            const lines = [
+                { type: 'C', text: 'git pull origin main' },
+                { type: 'O', text: 'Fetching origin...' },
+                { type: 'O', text: 'Receiving objects: 100% done.' },
+                { type: 'O', text: 'Updating local repository...' },
+                { type: 'O', text: 'Fast-forward.' },
+                { type: 'O', text: 'Update complete.' },
+                { type: 'C', text: 'docker-compose up -d' },
+                { type: 'O', text: 'Pulling nginx (nginx:latest)...' },
+                { type: 'O', text: 'latest: Pulling from library/nginx' },
+                { type: 'O', text: 'Status: Image is up to date for nginx:latest' },
+                { type: 'O', text: 'Creating network "homepage_default"... done' },
+                { type: 'O', text: 'Site deployed successfully.' },
+                { type: 'O', text: 'Opening site...' },
+                { type: 'O', text: 'Redirecting...' },
+                { type: 'O', text: '3' },
+                { type: 'O', text: '2' },
+                { type: 'O', text: '1' }
+            ];
+
+            const promptText = "waves.sh@prod01:~/home-page$ ";
+            const typingSpeed = 50;
+            const lineDelay = 400;
+            const commandDelay = 150;
+            const countdownDelay = 800;
+            const redirectDelay = 500; // Delay after '1' before redirecting
+
+            let currentLineIndex = 0;
+            let currentCharIndex = 0;
+            let currentLineElement = null;
+            let currentTextElement = null;
+            let cursorElement = null;
+
+            function createNewLine(lineType) {
+                currentLineElement = document.createElement('div');
+                currentLineElement.className = 'terminal-line';
+
+                if (lineType === 'C') {
+                    const promptSpan = document.createElement('span');
+                    promptSpan.className = 'prompt';
+                    promptSpan.textContent = promptText;
+                    currentLineElement.appendChild(promptSpan);
+                    currentTextElement = document.createElement('span');
+                    currentTextElement.className = 'command';
+                    currentLineElement.appendChild(currentTextElement);
+                    cursorElement = document.createElement('span');
+                    cursorElement.className = 'cursor';
+                    currentLineElement.appendChild(cursorElement);
+                } else { // 'O' for Output
+                    currentTextElement = document.createElement('span');
+                    currentTextElement.className = 'output';
+                    currentLineElement.appendChild(currentTextElement);
+                    cursorElement = null;
+                }
+                terminalBody.appendChild(currentLineElement);
+                terminalBody.scrollTop = terminalBody.scrollHeight;
+                currentCharIndex = 0;
+            }
+
+            function processLine() {
+                if (currentLineIndex >= lines.length) {
+                    // --- All lines processed, trigger redirect ---
+                    setTimeout(() => {
+                        window.location.href = redirectUrl;
+                    }, redirectDelay);
+                    return; // Stop processing
+                }
+
+                const currentLineData = lines[currentLineIndex];
+                createNewLine(currentLineData.type);
+
+                let delayForNext;
+                if (['3', '2', '1'].includes(currentLineData.text) && currentLineData.type === 'O') {
+                    delayForNext = countdownDelay;
+                } else {
+                    delayForNext = lineDelay;
+                }
+
+                if (currentLineData.type === 'O') {
+                    currentTextElement.textContent = currentLineData.text;
+                    currentLineIndex++;
+                    currentLineElement = null;
+                    currentTextElement = null;
+                    setTimeout(processLine, delayForNext);
+                } else {
+                    typeCommandCharacter();
+                }
+            }
+
+            function typeCommandCharacter() {
+                const currentLineData = lines[currentLineIndex];
+                const textToType = currentLineData.text;
+
+                if (currentCharIndex < textToType.length) {
+                    currentTextElement.textContent += textToType.charAt(currentCharIndex);
+                    currentCharIndex++;
+                    setTimeout(typeCommandCharacter, typingSpeed);
+                } else {
+                    if (cursorElement) cursorElement.remove();
+                    currentLineIndex++;
+                    currentLineElement = null;
+                    currentTextElement = null;
+                    setTimeout(processLine, commandDelay);
+                }
+            }
+
+            // Start the simulation
+            processLine();
+        });
+    </script>
 </body>
 </html>
-
